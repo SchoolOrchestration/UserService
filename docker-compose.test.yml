@@ -1,0 +1,13 @@
+version: "3"
+services:
+  sut:
+    build: .
+    command: sh run_tests.sh
+    environment:
+      CODACY_PROJECT_TOKEN: 59631c80a4fc4d90871e7237673446cb
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    image: postgres:9.5

@@ -1,0 +1,11 @@
+version: "3"
+services:
+  school:
+    image: vumatel/infrastructure:latest
+    volumes:
+      - ~/.ssh/config:/root/.ssh/config # map ssh keys
+      - ~/.ssh:/root/.ssh # map ssh key
+    command: ansible-playbook /code/swarm.yml  -i /etc/ansible/inventory --vault-password-file=/code/.vault.key --tags=userservice --limit=new_swarm
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=False
+      - ANSIBLE_LIBRARY=/etc/ansible/library

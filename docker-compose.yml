@@ -1,0 +1,27 @@
+version: "3"
+services:
+  db:
+    restart: on-failure:10
+    image: postgres:9.5
+    networks:
+      - default
+    volumes:
+      - "postgres-db-volume:/var/lib/postgresql/data"
+
+  web:
+    restart: on-failure:10
+    build: .
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    networks:
+      - default
+    ports:
+      - "8000:80"
+    environment:
+      - ALLOWED_HOSTS=localhost
+volumes:
+  postgres-db-volume:
+networks:
+  default:
