@@ -28,12 +28,13 @@ STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DATABASE_NAME', 'postgres'),
-        'USER': os.environ.get('DATABASE_NAME', 'postgres'),
+        'NAME': get_secret('DATABASE_NAME', 'postgres'),
+        'USER': get_secret('DATABASE_USER', 'postgres'),
         'HOST': get_secret('DATABASE_HOST', 'db'),
-        'PORT': os.environ.get('POSTGRES_DB_PORT', '5432'),
+        'PORT': get_secret('POSTGRES_DB_PORT', '5432'),
     }
 }
+
 db_password = get_secret('USERSERVICE_DATABASE_PASSWORD', False)
 if db_password:
     DATABASES.get('default').update({'PASSWORD': db_password})

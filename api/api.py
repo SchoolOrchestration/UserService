@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import viewsets, status
+from django.contrib.auth.models import User
+from api.serializers import UserSerializer
 from django.conf import settings
 
 
@@ -29,3 +31,8 @@ class HealthViewSet(viewsets.ViewSet):
         }
 
         return response
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
