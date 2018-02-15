@@ -7,7 +7,7 @@ VERSION = '1'
 if os.environ.get('SENTRY_PROJECT_NUMBER', None):
     RAVEN_CONFIG = {
         'dsn': 'https://%s@sentry.io/%s' % (
-            get_secret("CUSTOMERSERVICE_SENTRY_TOKEN"),
+            get_secret("USERSERVICE_SENTRY_TOKEN"),
             get_secret("SENTRY_PROJECT_NUMBER")
         )
     }

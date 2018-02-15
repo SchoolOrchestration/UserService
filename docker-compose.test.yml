@@ -4,7 +4,7 @@ services:
     build: .
     command: sh run_tests.sh
     environment:
-      CODACY_PROJECT_TOKEN: 59631c80a4fc4d90871e7237673446cb
+      CODACY_PROJECT_TOKEN: 7f1ced6f1caf4ba0a83625fafb4d9160
     links:
       - db
     depends_on:
