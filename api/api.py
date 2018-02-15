@@ -1,9 +1,14 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
-from rest_framework import viewsets, status
-from django.contrib.auth.models import User
-from api.serializers import UserSerializer
+from django.contrib.auth import authenticate
+from django.http import JsonResponse
 from django.conf import settings
+from rest_framework import (
+    decorators,
+    viewsets,
+    status
+)
 
 
 # Create your views here.
@@ -33,6 +38,16 @@ class HealthViewSet(viewsets.ViewSet):
         return response
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+@csrf_exempt
+@decorators.api_view(['POST'])
+def get_user_info(request):
+    username = request.POST.get('username', None)
+    password = request.POST.get('password', None)
+    user = authenticate(username=username, password=password)
+    data = dict()
+    status_code = 401
+    if user:
+        data['username'] = user.username
+        data['id'] = user.id
+        status_code = 200
+    return JsonResponse(data, status=status_code)

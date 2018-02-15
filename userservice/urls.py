@@ -17,6 +17,7 @@ from rest_framework_swagger.views import get_swagger_view
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
+from api import api
 
 schema_view = get_swagger_view(
     title='Users API',
@@ -26,5 +27,6 @@ schema_view = get_swagger_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('docs/', schema_view),
+    path('login/', api.get_user_info, name='login'),
     path('', include('api.urls'), name='api')
 ]

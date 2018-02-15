@@ -1,7 +1,6 @@
 from rest_framework.test import APIClient as Client
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.urls import reverse
 import faker
 import uuid
 
@@ -10,13 +9,35 @@ class UserTestCase(TestCase):
 
     def setUp(self):
         self.faker = faker.Faker()
-        User.objects.create_user(
+        self.password = str(uuid.uuid4())
+        self.user = User.objects.create_user(
             username=self.faker.first_name(),
-            password=str(uuid.uuid4())
+            password=self.password
         )
         self.client = Client()
 
-    def test_list_user(self):
-        response = self.client.get("/user/")
-        self.assertTrue(len(response.json()) == 1,
-                        msg='User ViewSet working')
+    def test_get_user(self):
+        response = self.client.post(
+            "/login/",
+            {
+                'username': self.user.username,
+                'password': self.password
+            }
+        )
+        expected_response = {
+            "username": self.user.username,
+            "id": self.user.id
+        }
+        self.assertTrue(response.json() == expected_response,
+                        msg='User not authenticated')
+
+    def test_get_user_fails(self):
+        response = self.client.post(
+            "/login/",
+            {
+                'username': self.user.username,
+                'password': str(uuid.uuid4())
+            }
+        )
+        self.assertTrue(response.status_code == 401,
+                        msg='Authentication failure not handled')
