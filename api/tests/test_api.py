@@ -1,6 +1,7 @@
 from rest_framework.test import APIClient as Client
 from django.contrib.auth.models import User
 from django.test import TestCase
+
 import faker
 import uuid
 

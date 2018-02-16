@@ -41,6 +41,24 @@ class HealthViewSet(viewsets.ViewSet):
 @csrf_exempt
 @decorators.api_view(['POST'])
 def get_user_info(request):
+    """
+    The below is configurations for swagger docs
+    ---
+    parameters:
+        - name: username
+          required: true
+          description: The username of the user
+          type: string
+          paramType: body
+        - name: password
+          required: true
+          description: The password of the user
+          type: string
+          paramType: body
+    responseMessages:
+        - code: 401
+          message: Not authenticated
+    """
     username = request.POST.get('username', None)
     password = request.POST.get('password', None)
     user = authenticate(username=username, password=password)
