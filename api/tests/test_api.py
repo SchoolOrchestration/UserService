@@ -1,7 +1,6 @@
 from rest_framework.test import APIClient as Client
 from django.contrib.auth.models import User
 from django.test import TestCase
-
 import faker
 import uuid
 
@@ -9,17 +8,17 @@ import uuid
 class UserTestCase(TestCase):
 
     def setUp(self):
-        self.faker = faker.Faker()
+        f = faker.Faker()
         self.password = str(uuid.uuid4())
         self.user = User.objects.create_user(
-            username=self.faker.first_name(),
+            username=f.first_name(),
             password=self.password
         )
         self.client = Client()
 
     def test_get_user(self):
         response = self.client.post(
-            "/login/",
+            "/login",
             {
                 'username': self.user.username,
                 'password': self.password

@@ -1,12 +1,15 @@
+from api.serializers import UserLoginSerializer, UserLogin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
+from .schema import user_login_schema
 from django.http import JsonResponse
 from django.conf import settings
 from rest_framework import (
     decorators,
     viewsets,
+    schemas,
     status
 )
 
@@ -40,32 +43,21 @@ class HealthViewSet(viewsets.ViewSet):
 
 @csrf_exempt
 @decorators.api_view(['POST'])
+@decorators.schema(user_login_schema)
 def get_user_info(request):
-    """
-    The below is configurations for swagger docs
-    ---
-    parameters:
-        - name: username
-          required: true
-          description: The username of the user
-          type: string
-          paramType: body
-        - name: password
-          required: true
-          description: The password of the user
-          type: string
-          paramType: body
-    responseMessages:
-        - code: 401
-          message: Not authenticated
-    """
-    username = request.POST.get('username', None)
-    password = request.POST.get('password', None)
-    user = authenticate(username=username, password=password)
-    data = dict()
+    serialized_data = UserLoginSerializer(data=request.data)
     status_code = 401
-    if user:
-        data['username'] = user.username
-        data['id'] = user.id
-        status_code = 200
+    data = dict()
+    if serialized_data.is_valid():
+        user_login = UserLogin()
+        user_login.username = serialized_data.data['username']
+        user_login.password = serialized_data.data['password']
+        user = authenticate(
+            username=user_login.username,
+            password=user_login.password
+        )
+        if user:
+            data['username'] = user.username
+            data['id'] = user.id
+            status_code = 200
     return JsonResponse(data, status=status_code)
