@@ -26,7 +26,7 @@ schema_view = get_swagger_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('docs/', schema_view),
+    path('docs/', schema_view, name='docs'),
     path('login', api.get_user_info, name='login'),
     path('', include('api.urls'), name='api')
 ]

@@ -33,11 +33,12 @@ class UserTestCase(TestCase):
 
     def test_get_user_fails(self):
         response = self.client.post(
-            "/login/",
+            "/login",
             {
                 'username': self.user.username,
                 'password': str(uuid.uuid4())
             }
         )
+        import ipdb;ipdb.set_trace()
         self.assertTrue(response.status_code == 401,
                         msg='Authentication failure not handled')
