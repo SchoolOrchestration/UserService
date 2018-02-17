@@ -39,6 +39,5 @@ class UserTestCase(TestCase):
                 'password': str(uuid.uuid4())
             }
         )
-        import ipdb;ipdb.set_trace()
         self.assertTrue(response.status_code == 401,
                         msg='Authentication failure not handled')
