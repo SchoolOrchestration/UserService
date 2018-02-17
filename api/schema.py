@@ -1,20 +1,17 @@
 from rest_framework.schemas import ManualSchema
-import coreschema
 import coreapi
+import uuid
 
 user_login_schema = ManualSchema(
     fields=[
         coreapi.Field(
-            "username",
+            "body",
             required=True,
-            location="form",
-            schema=coreschema.String()
-        ),
-        coreapi.Field(
-            "password",
-            required=True,
-            location="form",
-            schema=coreschema.String()
+            location="body",
+            schema={
+                'username': 'test_user',
+                'password': str(uuid.uuid4())
+            }
         ),
     ]
 )
