@@ -4,21 +4,20 @@ API Based ViewSets
 from api.serializers import UserLoginSerializer, UserLogin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+from rest_framework.status import HTTP_200_OK
 from django.contrib.auth import authenticate
+from api.schema import user_login_schema
 from django.http import JsonResponse
 from django.conf import settings
-from rest_framework import (
-    decorators,
-    schemas,
-    status
+from rest_framework.decorators import (
+    api_view,
+    schema
 )
-import coreschema
-import coreapi
 
 
 # Create your views here.
 @csrf_exempt
-@decorators.api_view(['GET'])
+@api_view(['GET'])
 def health(request):
     def can_connect_to_dependencies():
         """
@@ -42,16 +41,8 @@ def health(request):
 
 
 @csrf_exempt
-@decorators.schema(schemas.AutoSchema(manual_fields=[
-        coreapi.Field(
-            "body",
-            required=True,
-            location="body",
-            schema=coreschema.Object()
-        ),
-    ])
-)
-@decorators.api_view(['POST'])
+@schema(user_login_schema)
+@api_view(['POST'])
 def get_user_info(request):
     """
     description: This API deletes/uninstalls a device.
