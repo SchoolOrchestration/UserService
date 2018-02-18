@@ -1,3 +1,6 @@
+"""
+API Based ViewSets
+"""
 from api.serializers import UserLoginSerializer, UserLogin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
@@ -9,7 +12,6 @@ from django.conf import settings
 from rest_framework import (
     decorators,
     viewsets,
-    schemas,
     status
 )
 
@@ -37,7 +39,6 @@ class HealthViewSet(viewsets.ViewSet):
             "db": "OK",
             "version": settings.VERSION
         }
-
         return response
 
 
