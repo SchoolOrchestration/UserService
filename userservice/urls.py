@@ -24,6 +24,6 @@ schema_view = get_swagger_view(title='Demo Swagger API')
 urlpatterns = [
     url(r'^docs/', schema_view),
     path('admin/', admin.site.urls),
-    path('login', api.get_user_info, name='login'),
-    path('', include('api.urls'), name='api')
+    url(r'^health/', api.health, name='health'),
+    url(r'^login/', api.get_user_info, name='login'),
 ]
