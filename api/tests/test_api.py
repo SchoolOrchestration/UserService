@@ -18,7 +18,7 @@ class UserTestCase(TestCase):
 
     def test_get_user(self):
         response = self.client.post(
-            "/login",
+            "/login/",
             {
                 'username': self.user.username,
                 'password': self.password
@@ -33,7 +33,7 @@ class UserTestCase(TestCase):
 
     def test_get_user_fails(self):
         response = self.client.post(
-            "/login",
+            "/login/",
             {
                 'username': self.user.username,
                 'password': str(uuid.uuid4())
