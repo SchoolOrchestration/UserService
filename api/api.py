@@ -9,6 +9,10 @@ from django.contrib.auth import authenticate
 from .schema import user_login_schema
 from django.http import JsonResponse
 from django.conf import settings
+from rest_framework_swagger.renderers import (
+    SwaggerUIRenderer,
+    OpenAPIRenderer
+)
 from rest_framework import (
     decorators,
     viewsets,
@@ -45,6 +49,7 @@ class HealthViewSet(viewsets.ViewSet):
 @csrf_exempt
 @decorators.api_view(['POST'])
 @decorators.schema(user_login_schema)
+@decorators.renderer_classes([SwaggerUIRenderer, OpenAPIRenderer])
 def get_user_info(request):
     serialized_data = UserLoginSerializer(data=request.data)
     status_code = 401
