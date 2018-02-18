@@ -22,6 +22,7 @@ def health(request):
     def can_connect_to_dependencies():
         """
         Logic to check connection to dependencies
+        TODO: Abstract health_check to library
         :return string{up|down}
         """
         # Will throw an exception if database cannot connect

@@ -8,6 +8,7 @@ user_login_schema = schemas.AutoSchema(manual_fields=[
             "body",
             required=True,
             location="body",
-            schema=coreschema.Object()
+            schema=coreschema.Object(),
+            description="Returns a user object after authenticating"
         ),
     ])
