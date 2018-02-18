@@ -37,7 +37,7 @@ def health(request):
     data = {
         'version': settings.VERSION,
         'status': {'dependencies': can_connect_to_dependencies()}}
-    return JsonResponse(data, status=status.HTTP_200_OK)
+    return JsonResponse(data, status=HTTP_200_OK)
 
 
 @csrf_exempt
