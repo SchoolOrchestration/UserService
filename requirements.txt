@@ -10,6 +10,7 @@ ipython
 raven
 PyYaml
 coreapi
+markdown
 
 # Testing Utilities
 faker
