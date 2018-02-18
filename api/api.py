@@ -4,30 +4,25 @@ API Based ViewSets
 from api.serializers import UserLoginSerializer, UserLogin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
-from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from django.conf import settings
 from rest_framework import (
     decorators,
-    viewsets,
+    schemas,
     status
 )
+import coreschema
+import coreapi
 
 
 # Create your views here.
-class HealthViewSet(viewsets.ViewSet):
-
-    @classmethod
-    def list(cls, request):
-        """Health Endpoint"""
-        data = {'status': {'db': cls.can_connect_to_db()}}
-        return Response(data, status=status.HTTP_200_OK)
-
-    @staticmethod
-    def can_connect_to_db():
+@csrf_exempt
+@decorators.api_view(['GET'])
+def health(request):
+    def can_connect_to_dependencies():
         """
-        Logic to check connection to db
+        Logic to check connection to dependencies
         :return string{up|down}
         """
         # Will throw an exception if database cannot connect
@@ -36,12 +31,26 @@ class HealthViewSet(viewsets.ViewSet):
         response = {
             "status": "OK",
             "db": "OK",
-            "version": settings.VERSION
+            "queue": "Not Connected",
+            "pub_sub": "Not Connected"
         }
         return response
+    data = {
+        'version': settings.VERSION,
+        'status': {'dependencies': can_connect_to_dependencies()}}
+    return JsonResponse(data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
+@decorators.schema(schemas.AutoSchema(manual_fields=[
+        coreapi.Field(
+            "body",
+            required=True,
+            location="body",
+            schema=coreschema.Object()
+        ),
+    ])
+)
 @decorators.api_view(['POST'])
 def get_user_info(request):
     """
