@@ -2,73 +2,80 @@
 These schemas are for the Function Based Views Until a time that Django
 Rest Swagger supports them. Otherwise use the Auto generated Schemas
 """
-# encoding: utf-8
-from __future__ import unicode_literals
-from __future__ import absolute_import
-from rest_framework import exceptions
 from rest_framework.permissions import AllowAny
-from rest_framework.renderers import CoreJSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_swagger import renderers
-from django.utils.module_loading import import_string
+from rest_framework.schemas import SchemaGenerator
+from urllib.parse import urljoin
 import coreapi
-
-user_login_schema = coreapi.Document(
-    title='User Login',
-    url='/users/',
-    content={
-        'Login': coreapi.Link(
-            url='/login/',
-            action='Post',
-            fields=[
-                coreapi.Field(
-                    name='body',
-                    required=True,
-                    location='body',
-                    description='Returns a User Object on Authentication'
-                ),
-            ],
-            description='Authenticate users'
-        ),
-        'Health': coreapi.Link(
-            url='/health/',
-            action='Get',
-            description='Health Endpoint'
-        )
-    }
-)
+import yaml
 
 
-def get_swagger_view(schema_location):
-    """
-    Returns schema view which renders Swagger/OpenAPI.
-    """
-    class SwaggerSchemaView(APIView):
-        _ignore_model_permissions = True
-        exclude_from_schema = True
-        permission_classes = [AllowAny]
-        renderer_classes = [
-            CoreJSONRenderer,
-            renderers.OpenAPIRenderer,
-            renderers.SwaggerUIRenderer
-        ]
-
-        def get(self, request):
-            schema = None
-
+class CustomSchemaGenerator(SchemaGenerator):
+    def get_link(self, path, method, view):
+        fields = self.get_path_fields(path, method, view)
+        yaml_doc = None
+        if view and view.__doc__:
             try:
-                schema = import_string(schema_location)
+                yaml_doc = yaml.load(view.__doc__)
             except:
-                pass
+                yaml_doc = None
 
-            if not schema:
-                raise exceptions.ValidationError(
-                    'The schema generator did not return a schema Document'
+        #Extract schema information from yaml
+
+        if yaml_doc and type(yaml_doc) != str:
+            _method_desc = yaml_doc.get('description', '')
+            params = yaml_doc.get('parameters', [])
+
+            for i in params:
+                _name = i.get('name')
+                _desc = i.get('description')
+                _required = i.get('required', False)
+                _type = i.get('type', 'string')
+                _location = i.get('location', 'form')
+                field = coreapi.Field(
+                    name=_name,
+                    location=_location,
+                    required=_required,
+                    description=_desc,
+                    type=_type
                 )
+                fields.append(field)
+        else:
 
-            return Response(schema)
+            _method_desc = view.__doc__ if view and view.__doc__ else ''
+            fields += self.get_serializer_fields(path, method, view)
+
+        fields += self.get_pagination_fields(path, method, view)
+        fields += self.get_filter_fields(path, method, view)
+
+        if fields and any([field.location in ('form', 'body') for field in fields]):
+            encoding = self.get_encoding(path, method, view)
+        else:
+            encoding = None
+
+        if self.url and path.startswith('/'):
+            path = path[1:]
+
+        return coreapi.Link(
+            url=urljoin(self.url, path),
+            action=method.lower(),
+            encoding=encoding,
+            fields=fields,
+            description=_method_desc
+        )
 
 
-    return SwaggerSchemaView.as_view()
+class SwaggerSchemaView(APIView):
+    exclude_from_schema = True
+    permission_classes = [AllowAny]
+    renderer_classes = [
+        renderers.OpenAPIRenderer,
+        renderers.SwaggerUIRenderer
+    ]
 
+    def get(self, request):
+        generator = CustomSchemaGenerator()
+        schema = generator.get_schema(request=request)
+        return Response(schema)

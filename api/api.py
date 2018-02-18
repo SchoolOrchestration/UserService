@@ -48,8 +48,23 @@ class HealthViewSet(viewsets.ViewSet):
 
 @csrf_exempt
 @decorators.api_view(['POST'])
-@decorators.schema(user_login_schema)
 def get_user_info(request):
+    """
+    description: This API deletes/uninstalls a device.
+    parameters:
+      - name: name
+        type: string
+        required: true
+        location: form
+      - name: bloodgroup
+        type: string
+        required: true
+        location: form
+      - name: birthmark
+        type: string
+        required: true
+        location: form
+    """
     serialized_data = UserLoginSerializer(data=request.data)
     status_code = 401
     data = dict()
