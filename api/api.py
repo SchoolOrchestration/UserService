@@ -6,13 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from .schema import user_login_schema
 from django.http import JsonResponse
 from django.conf import settings
-from rest_framework_swagger.renderers import (
-    SwaggerUIRenderer,
-    OpenAPIRenderer
-)
 from rest_framework import (
     decorators,
     viewsets,
