@@ -19,6 +19,9 @@ from rest_framework.decorators import (
 @csrf_exempt
 @api_view(['GET'])
 def health(request):
+    """
+    A health endpoint that runs health checks on the db
+    """
     def can_connect_to_dependencies():
         """
         Logic to check connection to dependencies
@@ -46,20 +49,8 @@ def health(request):
 @schema(user_login_schema)
 def get_user_info(request):
     """
-    description: This API deletes/uninstalls a device.
-    parameters:
-      - name: name
-        type: string
-        required: true
-        location: form
-      - name: bloodgroup
-        type: string
-        required: true
-        location: form
-      - name: birthmark
-        type: string
-        required: true
-        location: form
+    This API returns a user object once authentication against a
+    username and password.
     """
     serialized_data = UserLoginSerializer(data=request.data)
     status_code = 401
