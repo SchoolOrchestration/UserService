@@ -3,13 +3,19 @@ import coreapi
 import coreschema
 
 
-user_login_schema = schemas.AutoSchema(manual_fields=[
+user_login_schema = schemas.ManualSchema(fields=[
     coreapi.Field(
-        "body",
+        "username",
         required=True,
-        location="body",
-        schema=coreschema.Object(),
-        description="Returns a user object after authenticating",
-        example="",
+        location="form",
+        schema=coreschema.String(),
+        example="test_user",
     ),
+    coreapi.Field(
+        "password",
+        required=True,
+        location="form",
+        schema=coreschema.String(),
+        example="test_password",
+    )
 ])

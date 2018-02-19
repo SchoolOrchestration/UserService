@@ -42,8 +42,8 @@ def health(request):
 
 
 @csrf_exempt
-@schema(user_login_schema)
 @api_view(['POST'])
+@schema(user_login_schema)
 def get_user_info(request):
     """
     description: This API deletes/uninstalls a device.
