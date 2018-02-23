@@ -3,6 +3,7 @@ import os
 
 
 VERSION = '1'
+KONG_ADMIN_URL = get_secret('KONG_ADMIN_URL')
 
 if os.environ.get('SENTRY_PROJECT_NUMBER', None):
     RAVEN_CONFIG = {
@@ -19,6 +20,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.JSONParser',
     ],
+    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata'
 }
 
 ALLOWED_HOSTS = ["*"]
@@ -64,3 +66,5 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+

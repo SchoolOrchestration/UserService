@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from rest_framework.status import HTTP_200_OK
 from django.contrib.auth import authenticate
+from api.serializers import UserSerializer
 from api.schema import user_login_schema
 from django.http import JsonResponse
 from django.conf import settings
@@ -64,7 +65,7 @@ def get_user_info(request):
             password=user_login.password
         )
         if user:
-            data['username'] = user.username
-            data['id'] = user.id
+            serialized = UserSerializer(user)
+            data = serialized.data
             status_code = 200
     return JsonResponse(data, status=status_code)
