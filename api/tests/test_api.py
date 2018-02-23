@@ -1,19 +1,34 @@
 from rest_framework.test import APIClient as Client
+from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.conf import settings
 from ..models import (
     Organization,
     Profile,
     Team,
 )
+import responses
 import faker
 import uuid
 
 
+@override_settings(KONG_ADMIN_URL="https://kong-staging.vumatel.co.za/manage")
 class UserTestCase(TestCase):
-
+    @responses.activate
     def setUp(self):
+
         f = faker.Faker()
+        kong_id = str(uuid.uuid4())
+        responses.add(
+            responses.POST,
+            '{}/consumers/'.format(settings.KONG_ADMIN_URL),
+            json={
+                'created_at': 1519279548000,
+                'username': 'organization_admin',
+                'id': kong_id
+            },
+            status=201
+        )
         self.org = Organization.objects.create(name='Organization')
         self.team_one = Team.objects.create(name='team_one',
                                             organization=self.org)
