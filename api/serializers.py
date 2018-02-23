@@ -24,11 +24,12 @@ class UserLoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     teams = serializers.SerializerMethodField()
+    organization = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         depth = 1
-        fields = ('username', 'id', 'teams')
+        fields = ('username', 'id', 'organization', 'teams')
 
     @staticmethod
     def get_teams(user):
@@ -36,3 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         for team in user.team_set.all():
             team_name_array.append(team.name)
         return team_name_array
+
+    @staticmethod
+    def get_organization(user):
+        return user.team_set.first().organization.name

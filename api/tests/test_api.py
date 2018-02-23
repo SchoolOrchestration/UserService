@@ -41,9 +41,9 @@ class UserTestCase(TestCase):
         expected_response = {
             "username": self.user.username,
             "id": self.user.id,
-            "teams": ['team_one', 'team_two']
+            "organization": self.org.name,
+            "teams": [self.team_one.name, self.team_two.name]
         }
-
         self.assertTrue(response.json() == expected_response,
                         msg='User not authenticated')
 
