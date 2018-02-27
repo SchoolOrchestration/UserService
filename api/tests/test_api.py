@@ -59,6 +59,7 @@ class UserTestCase(TestCase):
             "organization": self.org.name,
             "teams": [self.team_one.name, self.team_two.name]
         }
+        import ipdb;ipdb.set_trace()
         self.assertTrue(response.json() == expected_response,
                         msg='User not authenticated')
 

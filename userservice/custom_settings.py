@@ -4,6 +4,7 @@ import os
 
 VERSION = '1'
 KONG_ADMIN_URL = get_secret('KONG_ADMIN_URL')
+KONG_MANAGER_TOKEN = get_secret('KONG_MANAGER_TOKEN')
 
 if os.environ.get('SENTRY_PROJECT_NUMBER', None):
     RAVEN_CONFIG = {

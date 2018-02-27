@@ -11,7 +11,8 @@ class Consumer:
     def create(cls, username):
         cls.username = username
         response = requests.post(
-            '{}/consumers/'.format(settings.KONG_ADMIN_URL),
+            '{}/consumers/?apikey={}'.format(settings.KONG_ADMIN_URL,
+                                             settings.KONG_MANAGER_TOKEN),
             data={
                 'username': cls.username
             }
