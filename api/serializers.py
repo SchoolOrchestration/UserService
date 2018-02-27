@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Organization
 
 
 class UserLogin(object):
@@ -40,3 +41,10 @@ class UserSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_organization(user):
         return user.team_set.first().organization.name
+
+
+class OrganizationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Organization
+        fields = '__all__'

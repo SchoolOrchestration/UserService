@@ -1,7 +1,6 @@
 """
 API Based ViewSets
 """
-from api.serializers import UserLoginSerializer, UserLogin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from rest_framework.status import HTTP_200_OK
@@ -10,6 +9,16 @@ from api.serializers import UserSerializer
 from api.schema import user_login_schema
 from django.http import JsonResponse
 from django.conf import settings
+from .models import Organization
+from api.serializers import (
+    OrganizationSerializer,
+    UserLoginSerializer,
+    UserLogin
+)
+from rest_framework import (
+    permissions,
+    viewsets
+)
 from rest_framework.decorators import (
     api_view,
     schema
@@ -69,3 +78,14 @@ def get_user_info(request):
             data = serialized.data
             status_code = 200
     return JsonResponse(data, status=status_code)
+
+
+"""
+Resource Viewsets
+"""
+
+
+class OrganizationViewset(viewsets.ModelViewSet):
+    serializer_class = OrganizationSerializer
+    queryset = Organization.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
