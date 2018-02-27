@@ -13,6 +13,7 @@ import uuid
 
 
 @override_settings(KONG_ADMIN_URL="https://kong-staging.vumatel.co.za/manage")
+@override_settings(KONG_MANAGER_TOKEN="123456789")
 class UserTestCase(TestCase):
     @responses.activate
     def setUp(self):
@@ -21,7 +22,8 @@ class UserTestCase(TestCase):
         kong_id = str(uuid.uuid4())
         responses.add(
             responses.POST,
-            '{}/consumers/'.format(settings.KONG_ADMIN_URL),
+            '{}/consumers/?apikey={}'.format(settings.KONG_ADMIN_URL,
+                                             settings.KONG_MANAGER_TOKEN),
             json={
                 'created_at': 1519279548000,
                 'username': 'organization_admin',
@@ -59,7 +61,6 @@ class UserTestCase(TestCase):
             "organization": self.org.name,
             "teams": [self.team_one.name, self.team_two.name]
         }
-        import ipdb;ipdb.set_trace()
         self.assertTrue(response.json() == expected_response,
                         msg='User not authenticated')
 

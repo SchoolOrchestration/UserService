@@ -12,6 +12,7 @@ import uuid
 
 
 @override_settings(KONG_ADMIN_URL="https://kong-staging.vumatel.co.za/manage")
+@override_settings(KONG_MANAGER_TOKEN="123456789")
 class UserModelRelationshipTestCase(TestCase):
 
     @responses.activate
@@ -20,7 +21,8 @@ class UserModelRelationshipTestCase(TestCase):
         kong_id = str(uuid.uuid4())
         responses.add(
             responses.POST,
-            '{}/consumers/'.format(settings.KONG_ADMIN_URL),
+            '{}/consumers/?apikey={}'.format(settings.KONG_ADMIN_URL,
+                                             settings.KONG_MANAGER_TOKEN),
             json={
                 'created_at': 1519279548000,
                 'username': 'organization_admin',
@@ -45,6 +47,7 @@ class UserModelRelationshipTestCase(TestCase):
 
 
 @override_settings(KONG_ADMIN_URL="https://kong-staging.vumatel.co.za/manage")
+@override_settings(KONG_MANAGER_TOKEN="123456789")
 class OrganizationModelTestCase(TestCase):
 
     @responses.activate
@@ -52,7 +55,8 @@ class OrganizationModelTestCase(TestCase):
         kong_id = str(uuid.uuid4())
         responses.add(
             responses.POST,
-            '{}/consumers/'.format(settings.KONG_ADMIN_URL),
+            '{}/consumers/?apikey={}'.format(settings.KONG_ADMIN_URL,
+                                             settings.KONG_MANAGER_TOKEN),
             json={
                 'created_at': 1519279548000,
                 'username': 'organization_admin',
