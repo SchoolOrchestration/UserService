@@ -54,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
         organization_list = []
         for org in obj.organization_set.all():
             org_object = dict()
-            org_object['c'] = org.name
+            org_object['name'] = org.name
             org_object['id'] = org.id
             org_object['groups'] = []
             for team in org.team_set.filter(users=obj.id):
