@@ -2,20 +2,11 @@ from django.contrib import admin
 from api.models import (
     TeamPermissions,
     Organization,
-    Team
+    Permission,
+    Team,
 )
 
-
-class TeamPermissionsInline(admin.TabularInline):
-    model = TeamPermissions
-    extra = 1
-
-
-@admin.register(Team)
-class TeamAdmin(admin.ModelAdmin):
-    inline = [
-        TeamPermissionsInline
-    ]
-
-
-admin.register(Organization)
+admin.site.register(TeamPermissions)
+admin.site.register(Organization)
+admin.site.register(Permission)
+admin.site.register(Team)
