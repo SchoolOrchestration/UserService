@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Organization
+from .models import (
+    Organization,
+    Permission,
+    Team
+)
 
 
 class UserLogin(object):
@@ -22,29 +26,40 @@ class UserLoginSerializer(serializers.Serializer):
         return UserLogin(**validated_data)
 
 
+class PermissionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Permission
+        fields = ('name', 'code')
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    permissions = PermissionSerializer(many=True)
+
+    class Meta:
+        model = Team
+        fields = ('name', 'permissions')
+        depth = 1
+
+
 class UserSerializer(serializers.ModelSerializer):
-    teams = serializers.SerializerMethodField()
-    organization = serializers.SerializerMethodField()
+    organizations = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        depth = 1
-        fields = ('username', 'id', 'organization', 'teams')
+        fields = ('username', 'id', 'organizations')
 
     @staticmethod
-    def get_teams(user):
-        team_name_array = []
-        for team in user.team_set.all():
-            team_name_array.append(team.name)
-        return team_name_array
+    def get_organizations(obj):
+        organization_list = []
+        for org in obj.organization_set.all():
+            org_object = dict()
+            org_object['c'] = org.name
+            org_object['id'] = org.id
+            org_object['groups'] = []
+            for team in org.team_set.filter(users=obj.id):
+                serialized = TeamSerializer(team)
+                org_object['groups'].append(serialized.data)
+            organization_list.append(org_object)
+        return organization_list
 
-    @staticmethod
-    def get_organization(user):
-        return user.team_set.first().organization.name
-
-
-class OrganizationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Organization
-        fields = '__all__'

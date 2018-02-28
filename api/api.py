@@ -11,14 +11,14 @@ from django.http import JsonResponse
 from django.conf import settings
 from .models import Organization
 from api.serializers import (
-    OrganizationSerializer,
+    # OrganizationSerializer,
     UserLoginSerializer,
     UserLogin
 )
-from rest_framework import (
-    permissions,
-    viewsets
-)
+# from rest_framework import (
+#     permissions,
+#     viewsets
+# )
 from rest_framework.decorators import (
     api_view,
     schema
@@ -85,7 +85,7 @@ Resource Viewsets
 """
 
 
-class OrganizationViewset(viewsets.ModelViewSet):
-    serializer_class = OrganizationSerializer
-    queryset = Organization.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+# class OrganizationViewset(viewsets.ModelViewSet):
+#     serializer_class = OrganizationSerializer
+#     queryset = Organization.objects.all()
+    # permission_classes = (permissions.IsAuthenticated,)
