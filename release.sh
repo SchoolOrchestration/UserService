@@ -6,6 +6,6 @@ echo    # (optional) move to a new line
 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  docker build -t vumatel/userservice:${1:-$branch} .
-  docker push vumatel/userservice:${1:-$branch}
+  docker build -t schoolorchestration/userservice:${1:-$branch} .
+  docker push schoolorchestration/userservice:${1:-$branch}
 fi
