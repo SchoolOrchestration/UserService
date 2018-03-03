@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'storages',
     'django_filters',
-    'api'
+    'kongoauth',
+    'api',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

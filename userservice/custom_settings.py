@@ -21,6 +21,9 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.JSONParser',
     ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'kongoauth.authentication.KongOAuthAuthentication',
+    # ),
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata'
 }
 
@@ -68,4 +71,10 @@ SWAGGER_SETTINGS = {
     }
 }
 
+PERMISSIONS_HOST = os.environ.get('PERMISSIONS_HOST', 'redis')
 
+REDIS_CONN = {
+    'host': PERMISSIONS_HOST
+}
+
+AUTH_REDIS_KEY = 'authorization.{}'

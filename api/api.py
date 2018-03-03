@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate
 from api.serializers import UserSerializer
 from api.schema import user_login_schema
 from django.http import JsonResponse
+from kongoauth import authentication
 from django.conf import settings
 from .models import Organization
 from api.serializers import (
@@ -19,7 +20,9 @@ from api.serializers import (
 #     permissions,
 #     viewsets
 # )
+from django.contrib.auth.decorators import permission_required
 from rest_framework.decorators import (
+    authentication_classes,
     api_view,
     schema
 )
@@ -77,15 +80,18 @@ def get_user_info(request):
             serialized = UserSerializer(user)
             data = serialized.data
             status_code = 200
-    return JsonResponse(data, status=status_code)
+    return JsonResponse(data, status=status_code)\
 
 
-"""
-Resource Viewsets
-"""
 
-
-# class OrganizationViewset(viewsets.ModelViewSet):
-#     serializer_class = OrganizationSerializer
-#     queryset = Organization.objects.all()
-    # permission_classes = (permissions.IsAuthenticated,)
+@csrf_exempt
+@api_view(['GET'])
+@permission_required('None', raise_exception=True)
+@authentication_classes((authentication.KongOAuthAuthentication,))
+def test_user_middleware(request):
+    """
+    Just an endpoint to test django-kongoauth, will be removed shortly
+    """
+    user = request.user
+    import ipdb;ipdb.set_trace()
+    return JsonResponse({}, status=200)

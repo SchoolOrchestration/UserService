@@ -33,6 +33,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^health/', api.health, name='health'),
     re_path(r'^login/', api.get_user_info, name='login'),
+    re_path(r'^oauth/test', api.test_user_middleware, name='oauth-test'),
 ]
 
 urlpatterns += router.urls
